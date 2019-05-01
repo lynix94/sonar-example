@@ -1,0 +1,67 @@
+
+<html>
+<head>
+<title> sonar example 2 - list generation </title>
+<link href="/static/example.css" rel="stylesheet">
+</head>
+<body>
+
+<div>
+<h1>sonar example 2 - list generation</h1>
+<pre>
+This example shows generate whale list by object
+</pre>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using sonar;
+
+
+<h4>whale list</h4>
+def embed_whale_list(req)
+{
+	ret = '<div id="table">';
+
+	for k, v in req.whale_map {
+		ret += '<div class="row">';
+		ret += '<span class="cell col1">%s</span><span class="cell col2"><pre>%s</pre></span>' % (k, v);
+		ret += '</div>';
+	}
+	ret += '</div>';
+	return ret;
+}
+
+<br><br><br><a href="/">back to main</a>
+</div>
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex2.orca/index.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+
+</body>
+</html>
+
+
+<!-- prepare object is called first, now this process default as orca -->
+def prepare(req)
+{
+	# assume that this whale map is composed by other data source
+	req.MEMBERS['whale_map'] = {,};
+	req.whale_map['orca'] =  'The killer whale or orca (Orcinus orca) is a toothed whale\nbelonging to the oceanic dolphin family,\nof which it is the largest member.';
+
+	req.whale_map['humbback'] = 'The humpback whale (Megaptera novaeangliae) is a species of baleen whale.\nOne of the larger rorqual species,\nadults range in length from 1216 m (3952 ft)\nand weigh around 2530 metric tons (2833 short tons).';
+	req.whale_map['blue'] = 'The blue whale (Balaenoptera musculus) is a marine mammal\n belonging to the baleen whale parvorder, Mysticeti.\nAt up to 29.9 metres (98 ft) in length and with a maximum recorded weight of 173 tonnes\n(190 short tons), it is the largest animal known to have ever existed.';
+}
+
+

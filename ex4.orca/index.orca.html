@@ -1,0 +1,85 @@
+
+<html>
+<head>
+<title> sonar example 4 - orm </title>
+<link href="/static/example.css" rel="stylesheet">
+</head>
+<body>
+
+<div>
+<h1>sonar example 4 - orm</h1>
+<pre>
+This example shows form and orm processing of sonar
+if you click 'write', it calls write.orca.html.
+</pre>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using ex4.models;
+
+
+<h4>messages</h4>
+def embed_board(req)
+{
+	# add new message if exists
+	if req.post.has_key('name') {
+		name = req.post['name'];
+		subject = req.post['subject'];
+		message = req.post['message'];
+
+		if name.length() == 0 {
+			name = 'anonymous';
+		}
+
+		if subject.length() > 0 {
+			new_post = models.post.new();
+			new_post.name = name;
+			new_post.subject = subject;
+			new_post.message = message;
+			new_post.save();
+		}
+	}
+
+	# render messages as table
+	ret = '<div id="table">';
+	ret += '<div class="row">';
+	ret += '<span class="cell col1">id</span><span class="cell col2">subject</span><span class="cell col3">name</span>';
+	ret += '</div>';
+
+	post_iter = models.post.orderby(models.post.id).result();
+	for post in post_iter {
+		ret += '<div class="row">';
+		ret += '<span class="cell col1">%d</span><span class="cell col2"><a href="ex4_read?id=%d">%s</a></span><span class="cell col3">%s</span>' % (post.id, post.id, post.subject, post.name);
+		ret += '</div>';
+	}
+
+	ret += '</div>';
+	return ret;
+}
+
+<br><br><br><a href="ex4_write">write</a>
+
+<br><br><br><a href="/">back to main</a>
+</div>
+
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex4.orca/index.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+</body>
+</html>
+
+
+

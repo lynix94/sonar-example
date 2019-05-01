@@ -1,0 +1,14 @@
+
+using sonar;
+using orm;
+
+# Create your models here.
+
+def post : orm.model
+{
+	def id := orm.type.int().primary_key().auto_increment();
+	def name := orm.type.text();
+	def subject := orm.type.text();
+	def message := orm.type.text();
+}
+

@@ -1,0 +1,27 @@
+#table {
+	display: table;
+	width: 100%;
+}
+
+.title {
+	display: table-row;
+}
+
+.row {
+	display: table-row;
+}
+
+.cell {
+	display: table-cell;
+	padding: 3px;
+	border-bottom: 1px solid #DDD;
+}
+
+.col1 {
+	width: 20%;
+}
+
+.col2 {
+	width: 80%;
+}
+

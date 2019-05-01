@@ -1,0 +1,65 @@
+
+<html>
+<head>
+<title> sonar example 5 - orm with tag </title>
+<link href="/static/example.css" rel="stylesheet">
+</head>
+
+<body>
+<div>
+<h1>sonar example 5 - orm with tag</h1>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using ex5.models;
+using strings;
+
+def embed_board(req)
+{
+	if req.get.has_key('id') == false {
+		return '';
+	}
+
+	id = req.get['id'].integer();
+	post = models.post.where(models.post.id == id).result();
+
+	post.next();
+	p = post();
+
+	tag = html.tag.clone();
+	tag.output = strings.builder();
+
+	tag.div('class="row"') {
+		tag.output += '<span class="cell col1">%s</span><span class="cell col2">%s</span>' % (p.name, p.subject);
+	}
+	tag.output += '<pre>%s<pre>' % (p.message.replace('\\r\\n', '\r\n'));
+
+	return tag.output.string();
+}
+
+<br>
+<a href="/ex5">back</a>
+
+</div>
+
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex5.orca/read.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+</body>
+</html>
+
+
+

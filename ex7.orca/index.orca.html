@@ -1,0 +1,145 @@
+
+<html>
+<head>
+<title> sonar example 7 - ajax </title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="/static/example.css" rel="stylesheet">
+</head>
+<body>
+
+<div>
+<h1>sonar example 7 - ajax </h1>
+<pre>
+This example is simple message board with ajax
+</pre>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using html.form;
+using strings;
+using ex7.models;
+
+
+<h4>posts</h4>
+def embed_input_form(req) : form
+{
+	def name := form.input.text('name');
+	def subject := form.input.text('subject');
+	def message := form.input.textarea('message', 10, 40);
+	def submit := form.input.submit('add', my.submit_handler);
+
+	def.html.jquery submit_handler
+	{
+		var formData = $('form').serialize() + '&ajax';
+		$.ajax({
+			cache:false,
+			url:"/ex7",
+			type:'POST',
+			data:formData,
+			success:function(data) {
+				console.log(data);
+				$(".title").after(data);
+			},
+		});
+	}
+
+	// code start
+	form_result = .fill_and_get({'name':'anonymous'});
+	return .render('/ex7', form_result);
+}
+
+<br>
+
+def embed_board(req)
+{
+	# render messages as table
+	tag = html.tag.clone();
+	tag.output = strings.builder();
+	
+	tag.div.id('table') {
+		tag.div.class('title') {
+			tag.output += '<span class="cell col1">id</span><span class="cell col2">subject</span><span class="cell col3">name</span>';
+		}
+
+		post_iter = models.post.orderby_desc(models.post.id).result();
+		for post in post_iter {
+			tag.div.id(post.id.string()).class('row').event('click', my.click_handler) {
+				tag.output += '<span class="cell col1">%d</span><span class="cell col2">%s</span><span class="cell col3">%s</span>' % (post.id, post.subject, post.name);
+			}
+		}
+	}
+
+	def.html.jquery click_handler
+	{
+		var clicked  = $(this);
+		$.get('/ex7?ajax&id=' + $(this).attr('id'), function(data, status) {
+			clicked.after(data);
+		});
+	}
+
+	return tag.output.string();
+}
+
+<br><br><br><a href="/">back to main</a>
+</div>
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex7.orca/index.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+</body>
+</html>
+
+
+
+def prepare(req)
+{
+	if req.get.has_key('ajax') {
+		return ..ajax_read_response(req);
+	}
+	elif req.post.has_key('ajax') {
+		return ..ajax_write_response(req);
+	}
+}
+
+
+def ajax_read_response(req)
+{
+	if req.get.has_key('id') == false {
+		return '';
+	}
+
+	id = req.get['id'].integer();
+	post = models.post.where(models.post.id == id).result();
+	p = post();
+	
+	return '<pre>%s</pre>' % p.message.replace('\\r\\n', '\r\n');
+}
+
+def ajax_write_response(req)
+{
+	new_post = models.post.new();
+	new_post.name = req.post['name'];
+	new_post.subject = req.post['subject'];
+	new_post.message = req.post['message'];
+	new_post.save();
+	
+	post_iter = models.post.orderby_desc(models.post.id).limit(1).result();
+	p = post_iter();
+
+	ret = '<div id="%d" class="row"><span class="cell col1">%d</span><span class="cell col2">%s</span><span class="cell col3">%s</span></div>' % (p.id, p.id, p.subject, p.name);
+	ret += '<pre>%s</pre>' % p.message.replace('\\r\\n', '\r\n');
+	return ret;
+}
+

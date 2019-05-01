@@ -1,0 +1,118 @@
+
+<html>
+<head>
+<title> sonar example 6 - java script </title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div>
+<h1>sonar example 6 - java script </h1>
+<pre>
+sonar and orca html module support easy java script embedding.
+This example show many ways about that.
+</pre>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+
+using calf;
+using html;
+using sonar;
+using strings;
+
+<pre>
+#1. First example is that java script itself in orca.html file
+</pre>
+
+<p id="id_1">Click me to hide.</p>
+<script>
+$(document).ready(function(){
+  $("#id_1").click(function(){
+    $(this).hide();
+  });
+});
+</script>
+<br><br>
+
+<pre>
+#2. Second is emebedding script by def.jquery context extension object.
+This show, you can make more complex def.jquery object dynamically
+</pre>
+
+<p id="id_2">Click me to hide.</p>
+def.html.jquery embed_click_to_hide
+{
+	<script>
+	$(document).ready(function(){
+	  $("#id_2").click(function(){
+		$(this).hide();
+	  });
+	});
+	</script>
+}
+<br><br>
+
+<pre>
+#3. Third example use event() of html.tag object.
+</pre>
+
+def embed_tag
+{
+	tag = html.tag.clone();
+	tag.output = strings.builder();
+
+	def.html.jquery hide_script
+	{
+		$(this).hide();
+	}
+
+	tag.p.id('id_3').event('click', my.hide_script) {
+		tag.output += "Click me to hide";
+	}
+
+	return tag.output.string();
+}
+<br><br>
+
+<pre>
+#4. This example is same with above but use lambda object
+</pre>
+
+def embed_tag_with_lambda
+{
+	tag = html.tag.clone();
+	tag.output = strings.builder();
+
+	tag.p.id('id_4').event('click', lambda.html.jquery { $(this).hide(); }) {
+		tag.output += "Click me to hide";
+	}
+
+	return tag.output.string();
+}
+
+<br><br>
+
+<br><br><br><a href="/">back to main</a>
+</div>
+
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex6.orca/index.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+</body>
+</html>
+
+
+

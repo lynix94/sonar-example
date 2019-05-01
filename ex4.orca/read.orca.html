@@ -1,0 +1,63 @@
+
+<html>
+<head>
+<title> sonar example 4 - orm </title>
+<link href="/static/example.css" rel="stylesheet">
+</head>
+<body>
+
+<div>
+<h1>sonar example 4 - orm</h1>
+<pre>
+This example shows form and orm processing of sonar
+if you click 'write', it calls write.orca.html.
+</pre>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using ex4.models;
+
+def embed_board(req)
+{
+	if req.get.has_key('id') == false {
+		return '';
+	}
+
+	id = req.get['id'].integer();
+	post = models.post.where(models.post.id == id).result();
+	p = post();
+
+	ret = '<div class="row">';
+	ret += '<span class="cell col1">%s</span><span class="cell col2">%s</span>' % (p.name, p.subject);
+	ret += '</div>';
+	ret += '<pre>%s<pre>' % (p.message.replace('\\r\\n', '\r\n'));
+
+	return ret;
+}
+
+<br>
+<a href="/ex4">back</a>
+
+</div>
+
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex4.orca/read.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+</body>
+</html>
+
+
+

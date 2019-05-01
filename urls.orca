@@ -1,0 +1,27 @@
+
+using sonar.core;
+using sonar.contrib.admin;
+using example;
+using ex1;
+using ex2;
+using ex3;
+using ex4;
+using ex5;
+using ex6;
+using ex7;
+
+core.url_map =	{	r'^admin':admin.page,
+					r'':example.index,
+					r'^ex1':ex1.index,
+					r'^ex2':ex2.index,
+					r'^ex3':ex3.index,
+					r'^ex4':ex4.index,
+					r'^ex4_write':ex4.write,
+					r'^ex4_read':ex4.read,
+					r'^ex5':ex5.index,
+					r'^ex5_write':ex5.write,
+					r'^ex5_read':ex5.read,
+					r'^ex6':ex6.index,
+					r'^ex7':ex7.index,
+					# add other url map here
+				};

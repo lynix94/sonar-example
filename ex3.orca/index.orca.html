@@ -1,0 +1,84 @@
+
+<html>
+<head>
+<title> sonar example 3 - form </title>
+<link href="/static/example.css" rel="stylesheet">
+</head>
+<body>
+
+<div>
+<h1>sonar example 3 - form</h1>
+<pre>
+This example shows form processing of sonar
+</pre>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using html.form;
+using sonar;
+
+<h3>leave message</h3>
+
+def embed_input_form(req) : form
+{
+	def name := form.input.text('name');
+	def pw := form.input.password('password');
+	def message := form.input.textarea('message', 10, 40);
+	def submit := form.input.submit('add');
+
+	#form_result = .fill_and_get(req.post); # if you want keep input use this line instead below
+	form_result = .fill_and_get({'name':'anonymous'});
+
+	return .render('/ex3', form_result);
+}
+
+<h4>messages</h4>
+def embed_message_board(req)
+{
+	def messages := [];
+
+	# add new message if exists
+	if req.post.has_key('name') {
+		name = req.post['name'];
+		message = req.post['message'];
+		if name.length() > 0 && message.length() > 0 {
+			.messages.push_back((name, message));
+		}
+	}
+
+	# render messages as table
+	ret = '<div id="table">';
+	for msg in .messages {
+		ret += '<div class="row">';
+		ret += '<span class="cell col1">%s</span><span class="cell col2"><pre>%s</pre></span>' % (msg[0], msg[1]);
+		ret += '</div>';
+	}
+	ret += '</div>';
+	
+	return ret;
+}
+
+<br><br><br><a href="/">back to main</a>
+</div>
+
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex3.orca/index.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+</body>
+</html>
+
+
+

@@ -1,0 +1,48 @@
+
+<html>
+<head> <title> sonar example 5 - orm with tag </title> </head>
+<body>
+
+<div>
+<h1>sonar example 5 - orm with tag</h1>
+</div>
+
+<div>
+<div style="float:left; width:50%;">
+using html;
+using html.form;
+
+<h3>leave message</h3>
+
+def embed_input_form(req) : form
+{
+	def name := form.input.text('name');
+	def subject := form.input.text('subject');
+	def message := form.input.textarea('message', 10, 40);
+	def submit := form.input.submit('post');
+
+	form_result = .fill_and_get({'name':'anonymous'});
+	return .render('/ex5', form_result);
+}
+</div>
+
+
+
+<div style="float:left; width:50%;">
+<h3>code of this page</h3>
+<pre>
+def embed_code(req)
+{
+	code = os.read('ex5.orca/write.orca.html');
+	code = html.escape(code);
+	return code.replace('%', '&#37;');
+}
+</pre>
+</div>
+</div>
+
+</body>
+</html>
+
+
+
